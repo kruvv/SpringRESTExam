@@ -20,12 +20,16 @@ public class Initializer implements WebApplicationInitializer {
         // добавляем в контекст слушателя с нашей конфигурацией
         servletContext.addListener(new ContextLoaderListener(ctx));
 
-        ctx.setServletContext(servletContext);
+ //       ctx.setServletContext(servletContext);
+
+        AnnotationConfigWebApplicationContext dispatcherContext =
+                                     new AnnotationConfigWebApplicationContext();
+        dispatcherContext.register(WebAppConfig.class);
 
         // настраиваем маппинг Dispatcher Servlet-а
         ServletRegistration.Dynamic servlet =
-                servletContext.addServlet(DISPATCHER_SERVLET_NAME, new DispatcherServlet(ctx));
-        servlet.addMapping("/");
+                servletContext.addServlet(DISPATCHER_SERVLET_NAME, new DispatcherServlet(dispatcherContext));
         servlet.setLoadOnStartup(1);
+        servlet.addMapping("/");
     }
 }
